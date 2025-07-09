@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Passes - Event Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    /* Custom scrollbar hidden for hero background */
+    .hero-bg::-webkit-scrollbar {
+      display: none;
+    }
+    .hero-bg {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    .btn {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      font-weight: 600;
+      transition-property: all;
+      transition-duration: 300ms;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+    }
+    .btn-red {
+      background-color: #dc2626; /* Tailwind bg-red-600 */
+      color: #fff;
+    }
+    .btn-red:hover {
+      background-color: #b91c1c; /* Tailwind bg-red-700 */
+    }
+    .btn-blue {
+      background-color: #2563eb; /* Tailwind bg-blue-600 */
+      color: #fff;
+    }
+    .btn-blue:hover {
+      background-color: #1d4ed8; /* Tailwind bg-blue-700 */
+    }
+    .btn-outline {
+      border-width: 2px;
+      border-color: #2563eb; /* Tailwind border-blue-600 */
+      color: #2563eb; /* Tailwind text-blue-600 */
+      background-color: transparent;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover {
+      background-color: #2563eb;
+      color: #fff;
+    }
+    .btn-red {
+      background-color: #ef3b44;
+      color: white;
+      transition: background-color 0.2s ease;
+    }
+    .btn-red:hover {
+      background-color: #d03238;
+    }
+    .btn-blue {
+      background-color: #2563eb;
+      color: white;
+      transition: background-color 0.2s ease;
+    }
+    .btn-blue:hover {
+      background-color: #1e40af;
+    }
+
+    /* Animation and Transition Effects */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .animate-fadeInLeft {
+      animation: fadeInLeft 0.8s ease-out forwards;
+    }
+
+    .animate-fadeInRight {
+      animation: fadeInRight 0.8s ease-out forwards;
+    }
+
+    .animate-fadeInScale {
+      animation: fadeInScale 0.6s ease-out forwards;
+    }
+
+    .animate-slideDown {
+      animation: slideDown 0.6s ease-out forwards;
+    }
+
+    .animate-delay-1 {
+      animation-delay: 0.1s;
+    }
+
+    .animate-delay-2 {
+      animation-delay: 0.2s;
+    }
+
+    .animate-delay-3 {
+      animation-delay: 0.3s;
+    }
+
+    .animate-delay-4 {
+      animation-delay: 0.4s;
+    }
+
+    /* Header animations */
+    header {
+      animation: slideDown 0.8s ease-out;
+    }
+
+    /* Hero content animations */
+    .hero-content h1 {
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    .hero-content p {
+      animation: fadeInUp 1s ease-out 0.6s both;
+    }
+
+    .hero-content .btn {
+      animation: fadeInUp 1s ease-out 0.9s both;
+      transition: all 0.3s ease;
+    }
+
+    .hero-content .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Enhanced button effects */
+    .btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* Ticket style as logo */
+    .logo-ticket {
+      border: 2px solid #56a9f2;
+      border-radius: 6px;
+      width: 250px;
+      padding: 8px 0;
+      font-weight: 900;
+      color: #56a9f2;
+      font-family: 'Arial Black', Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      transform: rotate(-12deg);
+      margin: 20px auto;
+      box-shadow: 0 5px 15px rgb(86 169 242 / 0.3);
+      background: #fff;
+    }
+    .logo-ticket-barcode {
+      border-right: 2px solid #56a9f2;
+      padding: 0 10px 0 20px;
+      font-family: monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12rem;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .logo-ticket-barcode-lines {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 50px;
+      padding-left: 4px;
+    }
+    .barcode-line {
+      background: #56a9f2;
+      height: 4px;
+      width: 18px;
+      border-radius: 2px;
+      margin: 1px 0;
+    }
+    .logo-ticket-text {
+      flex-grow: 1;
+      text-align: center;
+      user-select: none;
+      font-size: 1.4rem;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+    }
+    .logo-ticket-link {
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: normal;
+      margin-top: 0.25rem;
+      color: #222;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Cards hover and shadow */
+    .event-card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.06);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 250px;
+      max-width: 100%;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .event-card:nth-child(1) { animation-delay: 0.1s; }
+    .event-card:nth-child(2) { animation-delay: 0.2s; }
+    .event-card:nth-child(3) { animation-delay: 0.3s; }
+    .event-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .event-card:hover {
+      box-shadow: 0 20px 40px rgb(0 0 0 / 0.15);
+      transform: translateY(-8px);
+    }
+
+    .event-image {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+      user-select: none;
+      transition: transform 0.4s ease;
+    }
+
+    .event-card:hover .event-image {
+      transform: scale(1.05);
+    }
+    .event-content {
+      padding: 0.75rem 1rem 1rem;
+      flex-grow: 1;
+      transition: all 0.3s ease;
+    }
+
+    .event-card:hover .event-content {
+      transform: translateY(-2px);
+    }
+
+    .event-button {
+      margin-top: auto;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      user-select: none;
+      width: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .event-button:hover::before {
+      left: 100%;
+    }
+
+    .event-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    .event-button.red {
+      background-color: #ef3b44;
+      color: white;
+    }
+    .event-button.red:hover {
+      background-color: #d03238;
+    }
+    .event-button.blue {
+      background-color: #2563eb;
+      color: white;
+    }
+    .event-button.blue:hover {
+      background-color: #1e40af;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <img src="logo.png" alt="My Passes Logo" class="h-16 sm:h-20 w-auto"/>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="hidden md:flex space-x-8">
+          <a href="#events" class="text-gray-700 hover:text-blue-600 font-medium">Events</a>
+          <a href="#vip" class="text-gray-700 hover:text-blue-600 font-medium">VIP Tables</a>
+          <a href="#partner" class="text-gray-700 hover:text-blue-600 font-medium">Partner With Us</a>
+        </nav>
+
+        <!-- CTA Buttons -->
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue text-sm sm:text-base px-6 sm:px-8 py-2 sm:py-3">Book Now</a>
+          
+          <!-- Mobile menu button -->
+          <button type="button" class="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section 
+    class="hero-bg flex items-center justify-center min-h-screen pt-20"
+    style="background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/dbaf072b-8621-4887-a317-51ce56782801.png'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+    aria-label="Hero background with concert crowd and colorful stage lights"
+  >
+    <div class="hero-content max-w-4xl mx-auto text-white text-center px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 sm:mb-6">Your Pass to the Best Events in Town!</h1>
+      <p class="text-lg sm:text-xl md:text-2xl max-w-2xl mx-auto mb-8 sm:mb-10">Book tickets and reserve tables at top clubs and events in your city – all in one place.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+        <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-red text-base sm:text-lg px-8 py-3" type="button">Browse Events</a>
+        <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue text-base sm:text-lg px-8 py-3" type="button">Reserve a Table</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Events -->
+  <section id="events" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10 text-center animate-fadeInUp">Featured Events</h2>
+    <div 
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 justify-center" 
+      aria-label="Featured events list"
+    >
+      <!-- Event 1 -->
+      <article class="event-card" role="group" aria-labelledby="event1-title">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/aff93d34-57b8-4896-a33a-85a49a938dc2.png" 
+          alt="Neon Nights Event crowd under colorful party lights" 
+          class="event-image"/>
+        <div class="event-content">
+          <h3 id="event1-title" class="font-semibold text-lg mb-1">Neon Nights</h3>
+          <p class="text-sm text-gray-600 mb-4">Apr. 2019, 02.20.m ain Pamanen</p>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-red w-full text-sm sm:text-base px-4 py-2" type="button">Get Pass</a>
+        </div>
+      </article>
+
+      <!-- Event 2 -->
+      <article class="event-card" role="group" aria-labelledby="event2-title">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/99e5d3f4-66d0-4ec4-995b-a8caefe20288.png" 
+          alt="Sunset Sessions event crowd at concert during sunset" 
+          class="event-image"/>
+        <div class="event-content">
+          <h3 id="event2-title" class="font-semibold text-lg mb-1">Sunset Sessions</h3>
+          <p class="text-sm text-gray-600 mb-4">Sept's. Jund crum Venuue</p>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-red w-full text-sm sm:text-base px-4 py-2" type="button">Get Pass</a>
+        </div>
+      </article>
+
+      <!-- Event 3 -->
+      <article class="event-card" role="group" aria-labelledby="event3-title">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/53c37647-035c-46f1-8c6b-51b22ebfab4a.png" 
+          alt="Techno Beats event crowd with blue lighting and energetic atmosphere" 
+          class="event-image"/>
+        <div class="event-content">
+          <h3 id="event3-title" class="font-semibold text-lg mb-1">Techno Beats</h3>
+          <p class="text-sm text-gray-600 mb-4">12 jan ovartrage Venue</p>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue w-full text-sm sm:text-base px-4 py-2" type="button">Get Pass</a>
+        </div>
+      </article>
+
+      <!-- Event 4 -->
+      <article class="event-card" role="group" aria-labelledby="event4-title">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ecdcd3a8-fffe-4252-9e05-0aea7de00eb0.png" 
+          alt="Electric Pulse event crowd under blue and purple stage lights" 
+          class="event-image"/>
+        <div class="event-content">
+          <h3 id="event4-title" class="font-semibold text-lg mb-1">Electric Pulse</h3>
+          <p class="text-sm text-gray-600 mb-4">16 Feb. 7:30pt Venue</p>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-red w-full text-sm sm:text-base px-4 py-2" type="button">Get Pass</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- VIP Booking Section -->
+  <section id="vip" class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
+    <div class="animate-fadeInLeft">
+      <h3 class="text-2xl sm:text-3xl font-bold mb-4">VIP Vibes? Book Your Table Now</h3>
+      <p class="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-md">Choose your club, pick your section, and reserve with ease.</p>
+      <ul class="space-y-4 sm:space-y-6 max-w-md">
+        <li class="flex items-start gap-4 animate-fadeInLeft animate-delay-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17l4-4-4-4m5 8l4-4-4-4" />
+          </svg>
+          <div>
+            <p class="font-semibold text-lg mb-1">Explore Events</p>
+            <p class="text-gray-600">Discover the hottest parties in your city.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 animate-fadeInLeft animate-delay-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A15.05 15.05 0 0112 15a15.05 15.05 0 016.879 2.804m-1.38-3.913a6.978 6.978 0 00-9.998 0m0 0a6.978 6.978 0 009.998 0M12 9a9 9 0 00-7.5 4.5M12 9a9 9 0 017.5 4.5M16.5 9a6.978 6.978 0 009.998 0" />
+          </svg>
+          <div>
+            <p class="font-semibold text-lg mb-1">Get Your Pass</p>
+            <p class="text-gray-600">Instantly book tickets or reserve tables.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 animate-fadeInLeft animate-delay-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 22V16H15V22M4.5 16a3.001 3.001 0 005.005.5M19.5 16a3.001 3.001 0 01-4.994.5M12 12v-7m6 6h-5" />
+          </svg>
+          <div>
+            <p class="font-semibold text-lg mb-1">Party Easy</p>
+            <p class="text-gray-600">Show your digital pass of entry and enjoy the night.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto lg:mx-0 animate-fadeInRight">
+      <!-- Club cards with consistent styling -->
+      <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
+        <h4 class="font-semibold text-lg mb-2">Club 1</h4>
+        <p class="text-gray-600 mb-4">Location</p>
+        <div class="flex justify-between items-center text-sm mb-4">
+          <span class="font-medium">Couple</span>
+          <span class="font-medium">4 Pax</span>
+        </div>
+        <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue w-full text-sm sm:text-base px-4 py-2" type="button">Reserve Now</a>
+      </div>
+
+      <!-- Club 2 -->
+      <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
+          <h4 class="font-semibold text-lg mb-2">Club 2</h4>
+          <p class="text-gray-600 mb-4">Location</p>
+          <div class="flex justify-between items-center text-sm mb-4">
+            <span class="font-medium">Couple</span>
+            <span class="font-medium">4 Pax</span>
+          </div>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue w-full text-sm sm:text-base px-4 py-2" type="button" aria-label="Reserve table now at Club 2">Reserve Now</a>
+        </div>
+
+        <!-- Club 3 -->
+        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
+          <h4 class="font-semibold text-lg mb-2">Club 3</h4>
+          <p class="text-gray-600 mb-4">Location</p>
+          <div class="flex justify-between items-center text-sm mb-4">
+            <span class="font-medium">6 Pax</span>
+            <span class="font-medium"> </span>
+          </div>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue w-full text-sm sm:text-base px-4 py-2" type="button" aria-label="Reserve table now at Club 3">Reserve Now</a>
+        </div>
+
+        <!-- Club 2 repeat as separate -->
+        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
+          <h4 class="font-semibold text-lg mb-2">Club 2</h4>
+          <p class="text-gray-600 mb-4">Location</p>
+          <div class="flex justify-between items-center text-sm mb-4">
+            <span class="font-medium">Couple</span>
+            <span class="font-medium">4 Pax</span>
+          </div>
+          <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue w-full text-sm sm:text-base px-4 py-2" type="button" aria-label="Reserve table now at Club 2 duplicate">Reserve Now</a>
+        </div>
+    </div>
+  </section>
+
+  <!-- Partner Call To Action -->
+  <section id="partner" class="bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 animate-fadeInUp">
+        <div class="animate-fadeInLeft">
+          <h3 class="text-2xl sm:text-3xl font-bold mb-4">Want to List Your Event or Club?</h3>
+          <p class="text-base sm:text-lg text-gray-600 max-w-xl">We help you sell out faster with seamless ticketing and reservations.</p>
+        </div>
+        <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="btn btn-blue text-base sm:text-lg px-6 sm:px-8 py-3 whitespace-nowrap animate-fadeInRight" type="button">Partner With Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white text-gray-900 border-t border-gray-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <!-- Company Info -->
+        <div class="animate-fadeInUp animate-delay-1">
+          <div class="flex justify-center mb-4">
+            <img src="logo.png" alt="My Passes Logo" class="h-20 w-auto transition-transform duration-300 hover:scale-105"/>
+          </div>
+          <p class="text-gray-600 mb-4 text-center">Your Pass to the Best Events in Town! Book tickets and reserve tables at top clubs and events in your city.</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-900">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#events" class="text-gray-600 hover:text-blue-600 transition-colors">Events</a></li>
+            <li><a href="#vip" class="text-gray-600 hover:text-blue-600 transition-colors">VIP Tables</a></li>
+            <li><a href="#partner" class="text-gray-600 hover:text-blue-600 transition-colors">Partner With Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-900">Get in Touch</h4>
+          <div class="space-y-3">
+            <!-- Email -->
+            <a href="mailto:mypassesindia@gmail.com" class="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              mypassesindia@gmail.com
+            </a>
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/+917559172585" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-600 hover:text-green-600 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488z"/>
+              </svg>
+              +91 75591 72585
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/mypasses.in/" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-600 hover:text-pink-600 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+              @mypasses.in
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Footer -->
+      <div class="border-t border-gray-200 pt-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-500 text-sm mb-4 md:mb-0">
+            © 2025 My Passes. All rights reserved.
+          </p>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-500 hover:text-blue-600 text-sm transition-colors">Privacy Policy</a>
+            <a href="#" class="text-gray-500 hover:text-blue-600 text-sm transition-colors">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+
