@@ -374,3 +374,27 @@ header {
 .event-button.blue:hover {
   background-color: #1e40af;
 }
+
+/* Glassmorphism Header Effect */
+.glass-header {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-menu {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+header {
+  transition: all 0.3s ease;
+}
+
+.glass-header .text-gray-700 {
+  color: rgba(33, 33, 33, 0.9);
+}
