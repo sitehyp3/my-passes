@@ -43,13 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const header = document.querySelector('header');
   if (header) {
     window.addEventListener('scroll', function() {
-      if (window.scrollY > 100) {
-        header.style.background = 'rgba(255, 255, 255, 0.85)';
-        header.style.backdropFilter = 'blur(12px)';
-      } else {
-        header.style.background = 'rgba(255, 255, 255, 0.7)';
-        header.style.backdropFilter = 'blur(10px)';
-      }
+      // Always pure white background regardless of scroll position
+      header.style.background = '#ffffff';
+      header.style.backdropFilter = 'none';
     });
+    // Set initial state to pure white
+    header.style.background = '#ffffff';
+    header.style.backdropFilter = 'none';
   }
 });
